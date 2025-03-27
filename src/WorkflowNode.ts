@@ -1,19 +1,19 @@
 import Workflow from "./Workflow";
 import {WorkflowNodeType} from "./enums";
-import {Executable} from "./types";
+import {ExecutableLike} from "./types";
 
 export interface WorkflowNodeProps<Input, Output, NodeType extends WorkflowNodeType> {
   id: string;
   name: string;
   type: NodeType;
-  execute: Executable<Input, Output, NodeType>;
+  execute: ExecutableLike<Input, Output, NodeType>;
 }
 
 export default class WorkflowNode<Input, Output, NodeType extends WorkflowNodeType> {
   readonly id: string;
   readonly name: string;
   readonly type: NodeType;
-  readonly execute: Executable<Input, Output, NodeType>;
+  readonly execute: ExecutableLike<Input, Output, NodeType>;
 
   private workflow: Workflow<any, any>;
   private next: string | ((input: Output) => void) | undefined;

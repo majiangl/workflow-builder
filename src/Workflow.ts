@@ -2,7 +2,7 @@ import WorkflowInstance from "./WorkflowInstance";
 import WorkflowNode from "./WorkflowNode";
 import IdGenerator from "./IdGenerator";
 import DefaultIdGenerator from "./DefaultIdGenerator";
-import {Executable, ExecutableFunction, NodeId} from "./types";
+import {ExecutableLike, ExecutableFunction, NodeId} from "./types";
 import {WorkflowNodeType} from "./enums";
 
 export interface WorkflowProps {
@@ -25,7 +25,11 @@ export default class Workflow<Input, Output> {
     this.ends = [];
   }
 
-  createNode<T extends WorkflowNodeType>(name: string, type: T, execute: Executable<Input, Output, T>): WorkflowNode<Input, Output, T> {
+  createNode<T extends WorkflowNodeType>(
+    name: string,
+    type: T,
+    execute: ExecutableLike<Input, Output, T>
+  ): WorkflowNode<Input, Output, T> {
     const id = this.idGenerator.nextId();
     const node = new WorkflowNode({
       id,
@@ -37,7 +41,10 @@ export default class Workflow<Input, Output> {
     return node;
   }
 
-  createLambdaNode(name: string, execute: ExecutableFunction<Input, Output>): WorkflowNode<Input, Output, WorkflowNodeType.Lambda> {
+  createLambdaNode(
+    name: string,
+    execute: ExecutableFunction<Input, Output>
+  ): WorkflowNode<Input, Output, WorkflowNodeType.Lambda> {
     return this.createNode(name, WorkflowNodeType.Lambda, execute);
   }
 
