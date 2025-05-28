@@ -1,9 +1,11 @@
 import Runnable from "./Runnable";
 
-export default class RunnablePassThrough<RunInput, RunConfig = never> extends Runnable<RunInput, RunInput, RunConfig> {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async run(input: RunInput, config?: RunConfig): Promise<RunInput> {
+export default class RunnablePassThrough<RunInput, Runner = never> extends Runnable<
+  RunInput,
+  RunInput,
+  Runner
+> {
+  async run(input: RunInput): Promise<RunInput> {
     return Promise.resolve(input);
   }
-
 }

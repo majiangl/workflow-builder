@@ -1,40 +1,43 @@
-import type { RunnableLike} from "./RunnableLike";
-import {coerceToRunnable} from "./RunnableLike";
-import type {RunnableProps} from "./Runnable";
+import { coerceToRunnable } from "./utils";
 import Runnable from "./Runnable";
+import { RunnableLike, RunnableMap } from "./Runnable.types";
+import { RunnableParallelProps } from "./RunnableParallel.types";
 
-export type RunnableMap<RunInput, RunOutput, RunConfig = never> = {
-  [K in keyof RunOutput]: RunnableLike<RunInput, RunOutput[K], RunConfig>;
-};
+export default class RunnableParallel<RunInput, RunOutput, Runner = never> extends Runnable<
+  RunInput,
+  RunOutput,
+  Runner
+> {
+  protected steps: Record<string, Runnable<RunInput, unknown, Runner>>;
 
-export interface RunnableParallelProps<RunInput, RunOutput, RunConfig = never> extends RunnableProps {
-  steps: RunnableMap<RunInput, RunOutput, RunConfig>
-}
-
-export default class RunnableParallel<RunInput, RunOutput, RunConfig = never> extends Runnable<RunInput, RunOutput, RunConfig> {
-  protected steps: Record<string, Runnable<RunInput, unknown, RunConfig>>;
-
-  static from<RunInput, RunOutput, RunConfig = never>(steps: RunnableMap<RunInput, RunOutput, RunConfig>, name?: string): RunnableParallel<RunInput, RunOutput, RunConfig> {
+  static from<RunInput, RunOutput, RunConfig = never>(
+    steps: RunnableMap<RunInput, RunOutput, RunConfig>,
+    name?: string,
+  ): RunnableParallel<RunInput, RunOutput, RunConfig> {
     return new RunnableParallel<RunInput, RunOutput, RunConfig>({
       steps,
-      name
+      name,
     });
   }
 
-  constructor(props: RunnableParallelProps<RunInput, RunOutput, RunConfig>) {
+  constructor(props: RunnableParallelProps<RunInput, RunOutput, Runner>) {
     super(props);
 
     this.steps = {};
-    for (const [key, value] of Object.entries(props.steps)) {
-      this.steps[key] = coerceToRunnable(value as RunnableLike<RunInput, unknown, RunConfig>);
+    for (const [key, value] of Object.entries<RunnableLike<RunInput, unknown, Runner>>(
+      props.steps,
+    )) {
+      this.steps[key] = coerceToRunnable(value);
     }
   }
 
-  async run(input: RunInput, config?: RunConfig): Promise<RunOutput> {
+  async run(input: RunInput, runner?: Runner): Promise<RunOutput> {
     const output: Record<string, unknown> = {};
-    await Promise.all(Object.entries(this.steps).map(async ([key, value]) => {
-      output[key] = await value.run(input, config);
-    }));
+    await Promise.all(
+      Object.entries(this.steps).map(async ([key, value]) => {
+        output[key] = await value.run(input, runner);
+      }),
+    );
     return output as RunOutput;
   }
 }

@@ -1,29 +1,31 @@
-import type {RunnableProps} from "./Runnable";
 import Runnable from "./Runnable";
+import { RunnableFunction } from "./Runnable.types";
+import { RunnableLambdaProps } from "./RunnableLambda.types";
 
-export type RunnableFunction<RunInput, RunOutput, RunConfig = never> = (input: RunInput, config?: RunConfig) => RunOutput | Promise<RunOutput>;
+export default class RunnableLambda<RunInput, RunOutput, Runner = never> extends Runnable<
+  RunInput,
+  RunOutput,
+  Runner
+> {
+  fn: RunnableFunction<RunInput, RunOutput, Runner>;
 
-export interface RunnableLambdaProps<RunInput, RunOutput, RunConfig = never> extends RunnableProps {
-  fn: RunnableFunction<RunInput, RunOutput, RunConfig>
-}
-
-export default class RunnableLambda<RunInput, RunOutput, RunConfig = never> extends Runnable<RunInput, RunOutput, RunConfig> {
-  fn: RunnableFunction<RunInput, RunOutput, RunConfig>;
-
-  static from<RunInput, RunOutput, RunConfig = never>(fn: RunnableFunction<RunInput, RunOutput, RunConfig>, name?: string): RunnableLambda<RunInput, RunOutput, RunConfig> {
+  static from<RunInput, RunOutput, RunConfig = never>(
+    fn: RunnableFunction<RunInput, RunOutput, RunConfig>,
+    name?: string,
+  ): RunnableLambda<RunInput, RunOutput, RunConfig> {
     return new RunnableLambda<RunInput, RunOutput, RunConfig>({
-      name: name || fn.name,
-      fn
+      name: name,
+      fn,
     });
   }
 
-  constructor(props: RunnableLambdaProps<RunInput, RunOutput, RunConfig>) {
+  constructor(props: RunnableLambdaProps<RunInput, RunOutput, Runner>) {
     super(props);
     this.fn = props.fn;
   }
 
-  async run(input: RunInput, config?: RunConfig): Promise<RunOutput> {
-    const output = await this.fn(input, config);
+  async run(input: RunInput, runner?: Runner): Promise<RunOutput> {
+    const output = await this.fn(input, runner);
     return output;
   }
 }
