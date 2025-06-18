@@ -2,25 +2,22 @@ import Runnable from "./Runnable";
 import { coerceToRunnable } from "./utils";
 import { RunnableLike } from "./Runnable.types";
 import { RunnableSequenceArray, RunnableSequenceProps } from "./RunnableSequence.types";
+import Runner from "./Runner";
 
-export default class RunnableSequence<RunInput, RunOutput, Runner = never> extends Runnable<
-  RunInput,
-  RunOutput,
-  Runner
-> {
-  protected steps: Runnable<unknown, unknown, Runner>[];
+export default class RunnableSequence<RunInput, RunOutput> extends Runnable<RunInput, RunOutput> {
+  protected steps: Runnable<unknown, unknown>[];
 
-  static from<RunInput, RunOutput, RunConfig = never>(
-    steps: RunnableSequenceArray<RunInput, RunOutput, RunConfig>,
+  static from<RunInput, RunOutput>(
+    steps: RunnableSequenceArray<RunInput, RunOutput>,
     name?: string,
-  ): RunnableSequence<RunInput, RunOutput, RunConfig> {
-    return new RunnableSequence<RunInput, RunOutput, RunConfig>({
+  ): RunnableSequence<RunInput, RunOutput> {
+    return new RunnableSequence<RunInput, RunOutput>({
       steps,
       name,
     });
   }
 
-  constructor(props: RunnableSequenceProps<RunInput, RunOutput, Runner>) {
+  constructor(props: RunnableSequenceProps<RunInput, RunOutput>) {
     super(props);
     this.steps = props.steps.map((step) => coerceToRunnable(step));
   }
@@ -34,20 +31,20 @@ export default class RunnableSequence<RunInput, RunOutput, Runner = never> exten
   }
 
   pipe<NewRunOutput>(
-    runnableLike: RunnableLike<RunOutput, NewRunOutput, Runner>,
-  ): RunnableSequence<RunInput, NewRunOutput, Runner> {
+    runnableLike: RunnableLike<RunOutput, NewRunOutput>,
+  ): RunnableSequence<RunInput, NewRunOutput> {
     const runnable = coerceToRunnable(runnableLike);
 
     if (runnable instanceof RunnableSequence) {
-      return RunnableSequence.from<RunInput, NewRunOutput, Runner>([
+      return RunnableSequence.from<RunInput, NewRunOutput>([
         ...this.steps,
         ...runnable.steps,
-      ] as RunnableSequenceArray<RunInput, NewRunOutput, Runner>);
+      ] as RunnableSequenceArray<RunInput, NewRunOutput>);
     }
 
-    return RunnableSequence.from<RunInput, NewRunOutput, Runner>([
+    return RunnableSequence.from<RunInput, NewRunOutput>([
       ...this.steps,
       runnable,
-    ] as RunnableSequenceArray<RunInput, NewRunOutput, Runner>);
+    ] as RunnableSequenceArray<RunInput, NewRunOutput>);
   }
 }

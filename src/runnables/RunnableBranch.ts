@@ -2,37 +2,34 @@ import Runnable from "./Runnable";
 import { coerceToRunnable } from "./utils";
 import { RunnableLike } from "./Runnable.types";
 import { Branch, BranchLike, RunnableBranchProps } from "./RunnableBranch.types";
+import Runner from "./Runner";
 
-export default class RunnableBranch<RunInput, RunOutput, Runner = never> extends Runnable<
-  RunInput,
-  RunOutput,
-  Runner
-> {
-  readonly #conditionalBranches: Branch<RunInput, RunOutput, Runner>[];
+export default class RunnableBranch<RunInput, RunOutput> extends Runnable<RunInput, RunOutput> {
+  readonly #conditionalBranches: Branch<RunInput, RunOutput>[];
 
-  readonly #defaultBranch: Runnable<RunInput, RunOutput, Runner>;
+  readonly #defaultBranch: Runnable<RunInput, RunOutput>;
 
-  static from<RunInput, RunOutput, RunConfig = never>(
-    branches: RunnableBranchProps<RunInput, RunOutput, RunConfig>["branches"],
+  static from<RunInput, RunOutput>(
+    branches: RunnableBranchProps<RunInput, RunOutput>["branches"],
     name?: string,
-  ): RunnableBranch<RunInput, RunOutput, RunConfig> {
-    return new RunnableBranch<RunInput, RunOutput, RunConfig>({
+  ): RunnableBranch<RunInput, RunOutput> {
+    return new RunnableBranch<RunInput, RunOutput>({
       branches: branches,
       name,
     });
   }
 
-  constructor(props: RunnableBranchProps<RunInput, RunOutput, Runner>) {
+  constructor(props: RunnableBranchProps<RunInput, RunOutput>) {
     super(props);
 
     const { branches } = props;
-    this.#conditionalBranches = (
-      branches.slice(0, -1) as BranchLike<RunInput, RunOutput, Runner>[]
-    ).map(([condition, branch]) => {
-      return [coerceToRunnable(condition), coerceToRunnable(branch)];
-    });
+    this.#conditionalBranches = (branches.slice(0, -1) as BranchLike<RunInput, RunOutput>[]).map(
+      ([condition, branch]) => {
+        return [coerceToRunnable(condition), coerceToRunnable(branch)];
+      },
+    );
     this.#defaultBranch = coerceToRunnable(
-      branches[branches.length - 1] as RunnableLike<RunInput, RunOutput, Runner>,
+      branches[branches.length - 1] as RunnableLike<RunInput, RunOutput>,
     );
   }
 

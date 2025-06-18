@@ -1,14 +1,13 @@
 import { RunnableLike, RunnableProps } from "./Runnable.types";
 
-export type RunnableSequenceArray<RunInput, RunOutput, RunConfig = never> =
-  | [RunnableLike<RunInput, RunOutput, RunConfig>]
+export type RunnableSequenceArray<RunInput, RunOutput> =
+  | [RunnableLike<RunInput, RunOutput>]
   | [
-      RunnableLike<RunInput, unknown, RunConfig>,
-      ...RunnableLike<unknown, unknown, RunConfig>[],
-      RunnableLike<unknown, RunOutput, RunConfig>,
+      RunnableLike<RunInput, unknown>,
+      ...RunnableLike<unknown, unknown>[],
+      RunnableLike<unknown, RunOutput>,
     ];
 
-export interface RunnableSequenceProps<RunInput, RunOutput, RunConfig = never>
-  extends RunnableProps {
-  steps: RunnableSequenceArray<RunInput, RunOutput, RunConfig>;
+export interface RunnableSequenceProps<RunInput, RunOutput> extends RunnableProps {
+  steps: RunnableSequenceArray<RunInput, RunOutput>;
 }

@@ -1,7 +1,8 @@
 import { RunnableLike, RunnableProps } from "./Runnable.types";
 import RunnableSequence from "./RunnableSequence";
+import Runner from "./Runner";
 
-export default abstract class Runnable<RunInput, RunOutput, Runner = never> {
+export default abstract class Runnable<RunInput, RunOutput> {
   #name?: string;
 
   protected constructor(props: RunnableProps) {
@@ -19,8 +20,8 @@ export default abstract class Runnable<RunInput, RunOutput, Runner = never> {
   abstract run(input: RunInput, runner?: Runner): Promise<RunOutput>;
 
   pipe<NewRunOutput>(
-    runnableLike: RunnableLike<RunOutput, NewRunOutput, Runner>,
-  ): RunnableSequence<RunInput, NewRunOutput, Runner> {
+    runnableLike: RunnableLike<RunOutput, NewRunOutput>,
+  ): RunnableSequence<RunInput, NewRunOutput> {
     return RunnableSequence.from([this]).pipe(runnableLike);
   }
 }

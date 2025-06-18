@@ -1,19 +1,16 @@
 import Runnable from "./Runnable";
 import { RunnableLike, RunnableProps } from "./Runnable.types";
 
-export type Branch<RunInput, RunOutput, Runner = never> = [
-  Runnable<RunInput, boolean, Runner>,
-  Runnable<RunInput, RunOutput, Runner>,
+export type Branch<RunInput, RunOutput> = [
+  Runnable<RunInput, boolean>,
+  Runnable<RunInput, RunOutput>,
 ];
 
-export type BranchLike<RunInput, RunOutput, Runner = never> = [
-  RunnableLike<RunInput, boolean, Runner>,
-  RunnableLike<RunInput, RunOutput, Runner>,
+export type BranchLike<RunInput, RunOutput> = [
+  RunnableLike<RunInput, boolean>,
+  RunnableLike<RunInput, RunOutput>,
 ];
 
-export interface RunnableBranchProps<RunInput, RunOutput, Runner = never> extends RunnableProps {
-  branches: [
-    ...BranchLike<RunInput, RunOutput, Runner>[],
-    RunnableLike<RunInput, RunOutput, Runner>,
-  ];
+export interface RunnableBranchProps<RunInput, RunOutput> extends RunnableProps {
+  branches: [...BranchLike<RunInput, RunOutput>[], RunnableLike<RunInput, RunOutput>];
 }
