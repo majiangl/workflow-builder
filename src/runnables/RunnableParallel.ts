@@ -26,7 +26,7 @@ export default class RunnableParallel<RunInput, RunOutput> extends Runnable<RunI
     }
   }
 
-  async run(input: RunInput, runner?: Runner): Promise<RunOutput> {
+  async run(input: RunInput, runner?: Runner<unknown, unknown>): Promise<RunOutput> {
     const output: Record<string, unknown> = {};
     await Promise.all(
       Object.entries(this.steps).map(async ([key, value]) => {

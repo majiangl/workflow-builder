@@ -33,7 +33,7 @@ export default class RunnableBranch<RunInput, RunOutput> extends Runnable<RunInp
     );
   }
 
-  async run(input: RunInput, runner?: Runner): Promise<RunOutput> {
+  async run(input: RunInput, runner?: Runner<unknown, unknown>): Promise<RunOutput> {
     for (const [condition, branch] of this.#conditionalBranches) {
       if (await condition.run(input, runner)) {
         return await branch.run(input, runner);

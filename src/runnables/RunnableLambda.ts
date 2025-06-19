@@ -21,7 +21,7 @@ export default class RunnableLambda<RunInput, RunOutput> extends Runnable<RunInp
     this.fn = props.fn;
   }
 
-  async run(input: RunInput, runner?: Runner): Promise<RunOutput> {
+  async run(input: RunInput, runner?: Runner<unknown, unknown>): Promise<RunOutput> {
     return this.fn(input, runner);
   }
 }

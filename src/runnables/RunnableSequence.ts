@@ -22,7 +22,7 @@ export default class RunnableSequence<RunInput, RunOutput> extends Runnable<RunI
     this.steps = props.steps.map((step) => coerceToRunnable(step));
   }
 
-  async run(input: RunInput, runner?: Runner): Promise<RunOutput> {
+  async run(input: RunInput, runner?: Runner<unknown, unknown>): Promise<RunOutput> {
     let output: unknown = input;
     for (const step of this.steps) {
       output = await step.run(output, runner);

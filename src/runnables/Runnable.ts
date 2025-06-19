@@ -17,7 +17,7 @@ export default abstract class Runnable<RunInput, RunOutput> {
     this.#name = n;
   }
 
-  abstract run(input: RunInput, runner?: Runner): Promise<RunOutput>;
+  abstract run(input: RunInput, runner?: Runner<unknown, unknown>): Promise<RunOutput>;
 
   pipe<NewRunOutput>(
     runnableLike: RunnableLike<RunOutput, NewRunOutput>,

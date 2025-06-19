@@ -7,7 +7,7 @@ export interface RunnableProps {
 
 export type RunnableFunction<RunInput, RunOutput> = (
   input: RunInput,
-  runner?: Runner,
+  runner?: Runner<unknown, unknown>,
 ) => RunOutput | Promise<RunOutput>;
 
 export type RunnableMap<RunInput, RunOutput> = {

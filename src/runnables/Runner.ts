@@ -1,7 +1,7 @@
 import { RunnerProps } from "./Runner.types";
 import Runnable from "./Runnable";
 
-export default abstract class Runner<RunInput = unknown, RunOutput = unknown> {
+export default abstract class Runner<RunInput, RunOutput> {
   readonly #runnable: Runnable<RunInput, RunOutput>;
 
   protected constructor(props: RunnerProps<RunInput, RunOutput>) {
