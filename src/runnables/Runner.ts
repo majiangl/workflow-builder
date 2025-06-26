@@ -3,16 +3,13 @@ import Runnable from "./Runnable";
 import { RunMonitor } from "./Runnable.types";
 
 export default class Runner<RunInput, RunOutput> {
-  runnable: Runnable<RunInput, RunOutput>;
-
   monitor: boolean;
-
+  #runnable: Runnable<RunInput, RunOutput>;
   #running: boolean = false;
-
   #runMetricsMap: Map<Runnable<unknown, unknown>, RunMetrics<unknown, unknown>>;
 
   constructor({ runnable, monitor = false }: RunnerProps<RunInput, RunOutput>) {
-    this.runnable = runnable;
+    this.#runnable = runnable;
     this.monitor = monitor;
     this.#runMetricsMap = new Map();
   }
@@ -24,7 +21,7 @@ export default class Runner<RunInput, RunOutput> {
     try {
       this.#running = true;
       this.#runMetricsMap.clear();
-      return await this.runnable.run(input, this.getRunMonitor());
+      return await this.#runnable.run(input, this.getRunMonitor());
     } finally {
       this.#running = false;
     }
