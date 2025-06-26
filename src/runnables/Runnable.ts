@@ -1,6 +1,5 @@
-import { RunnableLike, RunnableProps } from "./Runnable.types";
+import { RunMonitor, RunnableLike, RunnableProps } from "./Runnable.types";
 import RunnableSequence from "./RunnableSequence";
-import Runner from "./Runner";
 
 export default abstract class Runnable<RunInput, RunOutput> {
   #name?: string;
@@ -17,7 +16,23 @@ export default abstract class Runnable<RunInput, RunOutput> {
     this.#name = n;
   }
 
-  abstract run(input: RunInput, runner?: Runner<unknown, unknown>): Promise<RunOutput>;
+  async run(input: RunInput, monitor?: RunMonitor): Promise<RunOutput> {
+    let output: RunOutput | undefined;
+    let error: Error | undefined;
+
+    try {
+      monitor?.recordStart(this, input);
+      output = await this.executeTask(input, monitor);
+      return output;
+    } catch (e) {
+      error = e instanceof Error ? e : new Error(String(e));
+      throw error;
+    } finally {
+      monitor?.recordEnd(this, output, error);
+    }
+  }
+
+  protected abstract executeTask(input: RunInput, monitor?: RunMonitor): Promise<RunOutput>;
 
   pipe<NewRunOutput>(
     runnableLike: RunnableLike<RunOutput, NewRunOutput>,

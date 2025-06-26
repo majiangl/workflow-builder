@@ -1,5 +1,4 @@
 import Runnable from "./Runnable";
-import Runner from "./Runner";
 
 export interface RunnableProps {
   name?: string;
@@ -7,7 +6,6 @@ export interface RunnableProps {
 
 export type RunnableFunction<RunInput, RunOutput> = (
   input: RunInput,
-  runner?: Runner<unknown, unknown>,
 ) => RunOutput | Promise<RunOutput>;
 
 export type RunnableMap<RunInput, RunOutput> = {
@@ -18,3 +16,12 @@ export type RunnableLike<RunInput, RunOutput> =
   | Runnable<RunInput, RunOutput>
   | RunnableFunction<RunInput, RunOutput>
   | RunnableMap<RunInput, RunOutput>;
+
+export interface RunMonitor {
+  recordStart: <Input, Output>(runnable: Runnable<Input, Output>, input: Input) => void;
+  recordEnd: <Input, Output>(
+    runnable: Runnable<Input, Output>,
+    output?: Output,
+    error?: Error,
+  ) => void;
+}

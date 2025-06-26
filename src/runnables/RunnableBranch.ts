@@ -1,8 +1,7 @@
 import Runnable from "./Runnable";
 import { coerceToRunnable } from "./utils";
-import { RunnableLike } from "./Runnable.types";
+import { RunMonitor, RunnableLike } from "./Runnable.types";
 import { Branch, BranchLike, RunnableBranchProps } from "./RunnableBranch.types";
-import Runner from "./Runner";
 
 export default class RunnableBranch<RunInput, RunOutput> extends Runnable<RunInput, RunOutput> {
   readonly #conditionalBranches: Branch<RunInput, RunOutput>[];
@@ -33,12 +32,12 @@ export default class RunnableBranch<RunInput, RunOutput> extends Runnable<RunInp
     );
   }
 
-  async run(input: RunInput, runner?: Runner<unknown, unknown>): Promise<RunOutput> {
+  async executeTask(input: RunInput, monitor?: RunMonitor): Promise<RunOutput> {
     for (const [condition, branch] of this.#conditionalBranches) {
-      if (await condition.run(input, runner)) {
-        return await branch.run(input, runner);
+      if (await condition.run(input, monitor)) {
+        return await branch.run(input, monitor);
       }
     }
-    return await this.#defaultBranch.run(input, runner);
+    return await this.#defaultBranch.run(input, monitor);
   }
 }

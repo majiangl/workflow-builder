@@ -1,8 +1,7 @@
 import Runnable from "./Runnable";
 import { coerceToRunnable } from "./utils";
-import { RunnableLike } from "./Runnable.types";
+import { RunMonitor, RunnableLike } from "./Runnable.types";
 import { RunnableSequenceArray, RunnableSequenceProps } from "./RunnableSequence.types";
-import Runner from "./Runner";
 
 export default class RunnableSequence<RunInput, RunOutput> extends Runnable<RunInput, RunOutput> {
   protected steps: Runnable<unknown, unknown>[];
@@ -22,10 +21,10 @@ export default class RunnableSequence<RunInput, RunOutput> extends Runnable<RunI
     this.steps = props.steps.map((step) => coerceToRunnable(step));
   }
 
-  async run(input: RunInput, runner?: Runner<unknown, unknown>): Promise<RunOutput> {
+  async executeTask(input: RunInput, monitor?: RunMonitor): Promise<RunOutput> {
     let output: unknown = input;
     for (const step of this.steps) {
-      output = await step.run(output, runner);
+      output = await step.run(output, monitor);
     }
     return output as RunOutput;
   }

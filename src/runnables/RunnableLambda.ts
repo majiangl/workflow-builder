@@ -1,7 +1,6 @@
 import Runnable from "./Runnable";
 import { RunnableFunction } from "./Runnable.types";
 import { RunnableLambdaProps } from "./RunnableLambda.types";
-import Runner from "./Runner";
 
 export default class RunnableLambda<RunInput, RunOutput> extends Runnable<RunInput, RunOutput> {
   fn: RunnableFunction<RunInput, RunOutput>;
@@ -21,7 +20,7 @@ export default class RunnableLambda<RunInput, RunOutput> extends Runnable<RunInp
     this.fn = props.fn;
   }
 
-  async run(input: RunInput, runner?: Runner<unknown, unknown>): Promise<RunOutput> {
-    return this.fn(input, runner);
+  async executeTask(input: RunInput): Promise<RunOutput> {
+    return this.fn(input);
   }
 }
