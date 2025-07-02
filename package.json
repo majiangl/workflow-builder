@@ -1,24 +1,25 @@
 {
-  "name": "workflow",
+  "name": "workflow-builder",
   "version": "1.0.0",
-  "description": "A JavaScript library to create, run and monitor workflows.",
+  "description": "A TypeScript library to compose, execute, and monitor workflows with support for sequences, branches, parallel and loop execution.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://majiangl@github.com/majiangl/workflow.git"
+    "url": "git+https://majiangl@github.com/majiangl/workflow-builder.git"
   },
   "keywords": [
-    "workflow"
+    "workflow",
+    "pipeline"
   ],
   "author": "Ma, Jianglong",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/majiangl/workflow/issues"
+    "url": "https://github.com/majiangl/workflow-builder/issues"
   },
-  "homepage": "https://github.com/majiangl/workflow#readme",
+  "homepage": "https://github.com/majiangl/workflow-builder#readme",
   "devDependencies": {
     "@eslint/js": "^9.23.0",
     "eslint": "^9.23.0",

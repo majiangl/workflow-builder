@@ -1,2 +1,2 @@
-# workflow
-A JavaScript library to create, run and monitor workflows.
+# workflow-builder
+A TypeScript library to compose, execute, and monitor workflows with support for sequences, branches, parallel and loop execution.
