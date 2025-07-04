@@ -4,13 +4,23 @@ import { RunMonitor, RunnableLike } from "./Runnable.types";
 import { Branch, BranchLike, RunnableBranchProps } from "./RunnableBranch.types";
 
 /**
- * A Runnable that executes conditional branches.
+ * Runnable that selects which branch to run based on a condition.
+ * The Runnable is initialized with a list of [condition, Runnable] pairs and a default branch.
  *
- * It runs through a list of branches, each with a condition and a runnable task,
- * and a default branch at the end as a fallback.
+ * When operating on an input, the first condition that evaluates to True is selected,
+ * and the corresponding Runnable is run on the input.
  *
- * It executes the first branch whose condition evaluates to true,
- * or the default branch if none of the conditions are met.
+ * If no condition evaluates to True, the default branch is run on the input.
+ *
+ * @example
+ * ```typescript
+ * const branch = RunnableBranch.from<number, string>([
+ *   [( input ) => input >= 60, ( input ) => 'Passed'],
+ *   [( input ) => 'Failed'],
+ * ]);
+ * const result1 = await branch.run(75); // result1: 'Passed'
+ * const result2 = await branch.run(45); // result2: 'Failed'
+ * ```
  *
  * @template RunInput - The type of input for the run method.
  * @template RunOutput - The type of output from the run method.

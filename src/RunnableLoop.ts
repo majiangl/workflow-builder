@@ -1,15 +1,10 @@
 import Runnable from "./Runnable";
-import {
-  IterateeInput,
-  IterateeOutput,
-  Iterations,
-  RunnableForLoopProps,
-} from "./RunnableForLoop.types";
+import { IterateeInput, IterateeOutput, Iterations, RunnableLoopProps } from "./RunnableLoop.types";
 import { coerceToRunnable } from "./utils";
 import { RunnableLike } from "./Runnable.types";
 
 /**
- * A Runnable that executes a given iteratee for a specified number of iterations.
+ * Runnable that executes a given iteratee for a specified number of iterations.
  *
  * If the `IterateInput` is set to true, the `RunInput` is expected to be an array,
  * and the iteratee is executed for each element in that array.
@@ -17,14 +12,27 @@ import { RunnableLike } from "./Runnable.types";
  * If `IterateInput` is false, the iteratee is executed a fixed number of times
  * defined by the `iterations` property, with the same input passed to each execution.
  *
- * The output of the runnable is an array of results from each execution of the iteratee.
+ * The output of the Runnable is an array of results from each execution of the iteratee.
+ *
+ * @example
+ * ```typescript
+ * const square = (x: number) => x * x;
+ *
+ * // Usage 1: Iterate the input
+ * const loop1 = RunnableLoop.from<number[], number[], true>(square);
+ * const result1 = await loop.run([1, 2, 3, 4]); // result1: [1, 4, 9, 16]
+ *
+ * // Usage 2: Iterate fixed number of iterations
+ * const loop2 = RunnableLoop.from<number, number[], false>(square, 3);
+ * const result2 = await loop2.run(5); // result2: [25, 25, 25]
+ * ```
  *
  * @template RunInput - The type of input for the run method.
  * @template RunOutput - The type of output from the run method, expected to be an array.
  * @template IterateInput - A boolean indicating whether to iterate against the input (true)
  *    or a fixed number of iterations (false).
  */
-export default class RunnableForLoop<
+export default class RunnableLoop<
   RunInput,
   RunOutput extends [],
   IterateInput extends boolean,
@@ -40,7 +48,7 @@ export default class RunnableForLoop<
    */
   readonly #iterations: Iterations<RunInput, IterateInput>;
 
-  constructor(props: RunnableForLoopProps<RunInput, RunOutput, IterateInput>) {
+  constructor(props: RunnableLoopProps<RunInput, RunOutput, IterateInput>) {
     super(props);
     this.#iteratee = coerceToRunnable(props.iteratee);
     this.#iterations = props.iterations;
@@ -50,8 +58,8 @@ export default class RunnableForLoop<
     iteratee: RunnableLike<IterateeInput<RunInput, IterateInput>, IterateeOutput<RunOutput>>,
     iterations: Iterations<RunInput, IterateInput>,
     name?: string,
-  ): RunnableForLoop<RunInput, RunOutput, IterateInput> {
-    return new RunnableForLoop<RunInput, RunOutput, IterateInput>({
+  ): RunnableLoop<RunInput, RunOutput, IterateInput> {
+    return new RunnableLoop<RunInput, RunOutput, IterateInput>({
       iteratee,
       iterations,
       name,

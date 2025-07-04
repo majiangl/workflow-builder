@@ -3,9 +3,14 @@ import { RunnableFunction } from "./Runnable.types";
 import { RunnableLambdaProps } from "./RunnableLambda.types";
 
 /**
- * A Runnable that executes a function.
+ * Runnable that converts a function into a Runnable. Wrapping a function in a `RunnableLambda`
+ * makes the function usable in a sequence of operations, allowing it to be piped.
  *
- * This class is useful for wrapping a function to be used as a Runnable in a workflow.
+ * @example
+ * ```typescript
+ * const square = RunnableLambda.from<number, number>((x) => x * x);
+ * const result = await square.run(5); // result will be 25
+ * ```
  *
  * @template RunInput - The type of the input to the function.
  * @template RunOutput - The type of the output from the function.

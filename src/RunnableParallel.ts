@@ -4,15 +4,25 @@ import { RunMonitor, RunnableLike, RunnableMap } from "./Runnable.types";
 import { RunnableParallelProps } from "./RunnableParallel.types";
 
 /**
- * A Runnable that executes multiple runnables in parallel for the given input.
- * It is useful for running multiple tasks concurrently and collecting their results.
+ * Runnable that runs a mapping of Runnables in parallel and returns a mapping of their outputs.
+ * It invokes Runnables concurrently, providing the same input to each.
  *
- * @template RunInput - The input type for the runnables.
- * @template RunOutput - The output type for the runnables.
+ * @example
+ * ```typescript
+ * const parallel = RunnableParallel.from<number[], { sum: number; min: number; max: number}>({
+ *   sum: (arr) => arr.reduce((a, b) => a + b, 0),
+ *   min: (arr) => Math.min(...arr),
+ *   max: (arr) => Math.max(...arr),
+ * });
+ * const result = await parallel.run([1, 2, 3, 4, 5]); // result: { sum: 15, min: 1, max: 5 }
+ * ```
+ *
+ * @template RunInput - The input type for the Runnables.
+ * @template RunOutput - The output type for the Runnables.
  */
 export default class RunnableParallel<RunInput, RunOutput> extends Runnable<RunInput, RunOutput> {
   /**
-   * A map of step names to runnables.
+   * A map of step names to Runnables.
    * @private
    */
   readonly #steps: Record<string, Runnable<RunInput, unknown>>;

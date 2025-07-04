@@ -1,6 +1,6 @@
 import { RunnableLike, RunnableProps } from "./Runnable.types";
 
-export interface RunnableForLoopProps<RunInput, RunOutput extends [], IterateInput extends boolean>
+export interface RunnableLoopProps<RunInput, RunOutput extends [], IterateInput extends boolean>
   extends RunnableProps {
   iteratee: RunnableLike<IterateeInput<RunInput, IterateInput>, IterateeOutput<RunOutput>>;
   iterations: Iterations<RunInput, IterateInput>;

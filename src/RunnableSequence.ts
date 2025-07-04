@@ -4,8 +4,17 @@ import { RunMonitor, RunnableLike } from "./Runnable.types";
 import { RunnableSequenceArray, RunnableSequenceProps } from "./RunnableSequence.types";
 
 /**
- * A Runnable that executes a sequence of steps in order.
- * Each step can be any Runnable, and the output of each step is passed as input to the next step.
+ * Runnable that executes a sequence of steps in order. Each step can be any runnable-like,
+ * and the output of each step is passed as input to the next step.
+ *
+ * @example
+ * ```typescript
+ * const add = ({a, b}: { a: number; b: number}) => a + b;
+ * const square = (x: number) => x * x;
+ *
+ * const sequence = RunnableSequence.from<{ a: number; b: number}, number>([add, square]);
+ * const result = await sequence.run({ a: 2, b: 3 }); // result will be 25
+ * ```
  *
  * @template RunInput - The type of the input to the first step.
  * @template RunOutput - The type of the output of the last step.
