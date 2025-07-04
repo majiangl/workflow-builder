@@ -3,8 +3,24 @@ import { coerceToRunnable } from "./utils";
 import { RunMonitor, RunnableLike } from "./Runnable.types";
 import { RunnableSequenceArray, RunnableSequenceProps } from "./RunnableSequence.types";
 
+/**
+ * A Runnable that executes a sequence of steps in order.
+ * Each step can be any Runnable, and the output of each step is passed as input to the next step.
+ *
+ * @template RunInput - The type of the input to the first step.
+ * @template RunOutput - The type of the output of the last step.
+ */
 export default class RunnableSequence<RunInput, RunOutput> extends Runnable<RunInput, RunOutput> {
+  /**
+   * The steps in the sequence.
+   * @protected
+   */
   protected steps: Runnable<unknown, unknown>[];
+
+  constructor(props: RunnableSequenceProps<RunInput, RunOutput>) {
+    super(props);
+    this.steps = props.steps.map((step) => coerceToRunnable(step));
+  }
 
   static from<RunInput, RunOutput>(
     steps: RunnableSequenceArray<RunInput, RunOutput>,
@@ -14,11 +30,6 @@ export default class RunnableSequence<RunInput, RunOutput> extends Runnable<RunI
       steps,
       name,
     });
-  }
-
-  constructor(props: RunnableSequenceProps<RunInput, RunOutput>) {
-    super(props);
-    this.steps = props.steps.map((step) => coerceToRunnable(step));
   }
 
   async executeTask(input: RunInput, monitor?: RunMonitor): Promise<RunOutput> {
