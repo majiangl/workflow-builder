@@ -1,14 +1,14 @@
 {
-  "name": "workflow-builder",
+  "name": "easy-workflow",
   "version": "1.0.0",
-  "description": "A TypeScript library to compose, execute, and monitor workflows with support for sequences, branches, parallel and loop execution.",
+  "description": "A TypeScript library to create, run, and monitor workflows.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://majiangl@github.com/majiangl/workflow-builder.git"
+    "url": "git+https://majiangl@github.com/majiangl/easy-workflow.git"
   },
   "keywords": [
     "workflow",
@@ -17,9 +17,9 @@
   "author": "Ma, Jianglong",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/majiangl/workflow-builder/issues"
+    "url": "https://github.com/majiangl/easy-workflow/issues"
   },
-  "homepage": "https://github.com/majiangl/workflow-builder#readme",
+  "homepage": "https://github.com/majiangl/easy-workflow#readme",
   "devDependencies": {
     "@eslint/js": "^9.23.0",
     "eslint": "^9.23.0",
